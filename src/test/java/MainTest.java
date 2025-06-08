@@ -53,32 +53,50 @@ class MainTest {
     }
 
     @RepeatedTest(25)
-    @StdIo("rock")
+    @StdIo({"rock", "!exit"})
     void testUserChoiceRock(StdOut out) {
         Main.main(new String[]{});
-        String response = out.capturedString();
-        assertTrue(gotCorrectResponse(response, "rock", "scissors", "paper"));
+        String[] response = out.capturedLines();
+        assertEquals(2, response.length);
+        assertTrue(gotCorrectResponse(response[0], "rock", "scissors", "paper"));
+        assertEquals("Bye!", response[1]);
     }
 
     @RepeatedTest(25)
-    @StdIo("paper")
+    @StdIo({"paper", "!exit"})
     void testUserChoicePaper(StdOut out) {
         Main.main(new String[]{});
-        String response = out.capturedString();
-        assertTrue(gotCorrectResponse(response, "paper", "rock", "scissors"));
+        String[] response = out.capturedLines();
+        assertEquals(2, response.length);
+        assertTrue(gotCorrectResponse(response[0], "paper", "rock", "scissors"));
+        assertEquals("Bye!", response[1]);
     }
 
     @RepeatedTest(25)
-    @StdIo("scissors")
+    @StdIo({"scissors", "!exit"})
     void testUserChoiceScissors(StdOut out) {
         Main.main(new String[]{});
-        String response = out.capturedString();
-        assertTrue(gotCorrectResponse(response, "scissors", "paper", "rock"));
+        String[] response = out.capturedLines();
+        assertEquals(2, response.length);
+        assertTrue(gotCorrectResponse(response[0], "scissors", "paper", "rock"));
+        assertEquals("Bye!", response[1]);
     }
 
     private boolean gotCorrectResponse(String response, String draw, String win, String lose) {
         return (response.contains("draw") && response.contains(draw)) ||
                 (response.contains("Well done") && response.contains(win)) ||
                 (response.contains("Sorry,") && response.contains(lose));
+    }
+
+    @Test
+    @StdIo({"vellum", "pliers", "granite", "!exit"})
+    void testInvalidChoices(StdOut out) {
+        Main.main(new String[]{});
+        String[] response = out.capturedLines();
+        assertEquals(4, response.length);
+        assertEquals("Invalid input.", response[0]);
+        assertEquals("Invalid input.", response[1]);
+        assertEquals("Invalid input.", response[2]);
+        assertEquals("Bye!", response[3]);
     }
 }

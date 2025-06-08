@@ -3,6 +3,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Locale;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,6 +41,27 @@ class GameTest {
                 Arguments.of(Choice.SCISSORS, Choice.ROCK, "lose"),
                 Arguments.of(Choice.SCISSORS, Choice.PAPER, "win"),
                 Arguments.of(Choice.SCISSORS, Choice.SCISSORS, "draw")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void testGetUserChoice(String input, Choice expected) {
+        Choice actual = game.getUserChoice(input.toUpperCase(Locale.ROOT));
+        assertEquals(expected, actual);
+    }
+
+    static Stream<Arguments> testGetUserChoice() {
+        return Stream.of(
+                Arguments.of("rock", Choice.ROCK),
+                Arguments.of("RoCk", Choice.ROCK),
+                Arguments.of("paper", Choice.PAPER),
+                Arguments.of("PaPEr", Choice.PAPER),
+                Arguments.of("scissors", Choice.SCISSORS),
+                Arguments.of("SCisSOrs", Choice.SCISSORS),
+                Arguments.of("stone", null),
+                Arguments.of("veLlUm", null),
+                Arguments.of("PlieRs", null)
         );
     }
 }
