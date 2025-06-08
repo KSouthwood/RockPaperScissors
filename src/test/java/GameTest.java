@@ -2,8 +2,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junitpioneer.jupiter.StdIo;
-import org.junitpioneer.jupiter.StdOut;
 
 import java.util.stream.Stream;
 
@@ -19,34 +17,29 @@ class GameTest {
 
     @ParameterizedTest
     @MethodSource
-    @StdIo
-    void testValidChoices(String choice, String expectedLoseTo, StdOut out) {
-        String expected = String.format(game.loseMsg, expectedLoseTo);
-        String actual = game.checkForWin(choice);
+    void testDetermineWinner(Choice user, Choice computer, String winType) {
+        String expected = switch (winType) {
+            case "win" -> String.format(game.winMsg, computer.getChoice());
+            case "draw" -> String.format(game.drawMsg, computer.getChoice());
+            case "lose" -> String.format(game.loseMsg, computer.getChoice());
+            default -> "";
+        };
+
+        String actual = game.determineWinner(user, computer);
         assertEquals(expected, actual);
     }
 
-    static Stream<Arguments> testValidChoices() {
+    public static Stream<Arguments> testDetermineWinner() {
         return Stream.of(
-                Arguments.of("rock", "paper"),
-                Arguments.of("paper", "scissors"),
-                Arguments.of("scissors", "rock")
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource
-    @StdIo
-    void testInvalidChoices(String choice, String expected, StdOut out) {
-        String actual = game.checkForWin(choice);
-        assertEquals(expected, actual);
-    }
-
-    public static Stream<Arguments> testInvalidChoices() {
-        return Stream.of(
-                Arguments.of("vellum", "Unknown choice. Try again."),
-                Arguments.of("granite", "Unknown choice. Try again."),
-                Arguments.of("pliers", "Unknown choice. Try again.")
+                Arguments.of(Choice.ROCK, Choice.ROCK, "draw"),
+                Arguments.of(Choice.ROCK, Choice.PAPER, "lose"),
+                Arguments.of(Choice.ROCK, Choice.SCISSORS, "win"),
+                Arguments.of(Choice.PAPER, Choice.ROCK, "win"),
+                Arguments.of(Choice.PAPER, Choice.PAPER, "draw"),
+                Arguments.of(Choice.PAPER, Choice.SCISSORS, "lose"),
+                Arguments.of(Choice.SCISSORS, Choice.ROCK, "lose"),
+                Arguments.of(Choice.SCISSORS, Choice.PAPER, "win"),
+                Arguments.of(Choice.SCISSORS, Choice.SCISSORS, "draw")
         );
     }
 }

@@ -38,6 +38,17 @@ that the program's picked depending on the user's input. (i.e. if the user enter
 Let's not mess with the player too much, though: from now on, we're going to play fair. You'll be able to do this 
 with the help of the random module, while string formatting will assist you in announcing the result of the game.
 
+##### _Description_
+
+Let's do something more tangible. Nobody wants to play the game where you always lose. We can use the power of the 
+`Random` class to make the game a bit more challenging. Change the program to read input from the user, choose a 
+random option, and then says who won: the user or the computer. Use one of the following messages to display the 
+result (`<option>` is what was chosen by the computer).
+
+- Loss: `Sorry, but the computer chose <option>`
+- Draw: `There is a draw  (<option>)`
+- Win: `Well done. The computer chose <option> and failed`
+
 ### Stage 3: [Equalizing chances](https://hyperskill.org/projects/314/stages/1766/implement)
 
 #### _Summary_

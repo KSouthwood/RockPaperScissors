@@ -1,3 +1,5 @@
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -13,10 +15,12 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MainTest {
     private final String loseMsg  = "Sorry, but the computer chose %s.%n";
 
+    @Disabled("Just testing StdIn & StdOut capture.")
     @Test
     @StdIo("rock")
     void testMain(StdIn in, StdOut out) {
@@ -27,6 +31,7 @@ class MainTest {
         System.err.println(Arrays.toString(out.capturedLines()));
     }
 
+    @Disabled("Not needed beyond stage 1")
     @ParameterizedTest
     @MethodSource
     @WritesStdIo
@@ -45,5 +50,35 @@ class MainTest {
                 Arguments.of("paper", "scissors"),
                 Arguments.of("scissors", "rock")
         );
+    }
+
+    @RepeatedTest(25)
+    @StdIo("rock")
+    void testUserChoiceRock(StdOut out) {
+        Main.main(new String[]{});
+        String response = out.capturedString();
+        assertTrue(gotCorrectResponse(response, "rock", "scissors", "paper"));
+    }
+
+    @RepeatedTest(25)
+    @StdIo("paper")
+    void testUserChoicePaper(StdOut out) {
+        Main.main(new String[]{});
+        String response = out.capturedString();
+        assertTrue(gotCorrectResponse(response, "paper", "rock", "scissors"));
+    }
+
+    @RepeatedTest(25)
+    @StdIo("scissors")
+    void testUserChoiceScissors(StdOut out) {
+        Main.main(new String[]{});
+        String response = out.capturedString();
+        assertTrue(gotCorrectResponse(response, "scissors", "paper", "rock"));
+    }
+
+    private boolean gotCorrectResponse(String response, String draw, String win, String lose) {
+        return (response.contains("draw") && response.contains(draw)) ||
+                (response.contains("Well done") && response.contains(win)) ||
+                (response.contains("Sorry,") && response.contains(lose));
     }
 }
