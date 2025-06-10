@@ -15,7 +15,7 @@ public enum Choice {
         this.losesTo = loses;
     }
 
-    public String getChoice() {
+    public String choice() {
         return choice;
     }
 

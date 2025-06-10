@@ -67,12 +67,23 @@ be ready to handle typos in user input, or when there's a mishmash instead of a 
 doesn't correspond to any known command (an option or `!exit`), your program should output the following line: 
 `Invalid input`.
 
-### Stage 4: [Equalizing chances](https://hyperskill.org/projects/314/stages/1767/implement)
+### Stage 4: [Scoring the game](https://hyperskill.org/projects/314/stages/1767/implement)
 
 #### _Summary_
 
 It's time to find out who the best Rock-Paper-Scissors player is. You are going to need the basics of file handling
 to read the records of the results of previous games, as well as tally the user's score in the current game.
+
+##### _Description_
+
+People love to see their results as they're advancing to their goals. So, let's learn how to show the scoreboard! 
+When the game starts, users must be able to enter their names. After that, the program should greet users and read a 
+file named `rating.txt`. It is the file that contains the current scores for different players. The file format is 
+lines that contain a username and their score, divided by a single space.
+
+Take the current user score from the file and use it as a basis for counting the score during the game. If a user 
+inputs a name that is not in the file, the program should count their score from 0. Print the user score with the `!
+rating` command. Add 50 points for every draw, 100 for every win and 0 for losing. 
 
 ### Stage 5: [Equalizing chances](https://hyperskill.org/projects/314/stages/1768/implement)
 

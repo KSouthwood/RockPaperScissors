@@ -21,4 +21,6 @@ public final class ConsoleIO {
     public void println(String message) {
         output.println(message);
     }
+
+    public void print(String message) { output.print(message); }
 }

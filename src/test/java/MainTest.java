@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MainTest {
-    private final String loseMsg  = "Sorry, but the computer chose %s.%n";
 
     @Disabled("Just testing StdIn & StdOut capture.")
     @Test
@@ -39,6 +38,7 @@ class MainTest {
     void testStage1Run(String input, String output, StdOut out) {
         System.setIn(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
         Main.main(new String[]{});
+        String loseMsg  = "Sorry, but the computer chose %s.%n";
         String expected = String.format(loseMsg, output);
         String actual   = out.capturedString();
         assertEquals(expected, actual);
@@ -53,33 +53,33 @@ class MainTest {
     }
 
     @RepeatedTest(25)
-    @StdIo({"rock", "!exit"})
+    @StdIo({"Rock", "rock", "!exit"})
     void testUserChoiceRock(StdOut out) {
         Main.main(new String[]{});
         String[] response = out.capturedLines();
-        assertEquals(2, response.length);
-        assertTrue(gotCorrectResponse(response[0], "rock", "scissors", "paper"));
-        assertEquals("Bye!", response[1]);
+        assertEquals(3, response.length);
+        assertTrue(gotCorrectResponse(response[1], "rock", "scissors", "paper"));
+        assertEquals("Bye!", response[2]);
     }
 
     @RepeatedTest(25)
-    @StdIo({"paper", "!exit"})
+    @StdIo({"Paper", "paper", "!exit"})
     void testUserChoicePaper(StdOut out) {
         Main.main(new String[]{});
         String[] response = out.capturedLines();
-        assertEquals(2, response.length);
-        assertTrue(gotCorrectResponse(response[0], "paper", "rock", "scissors"));
-        assertEquals("Bye!", response[1]);
+        assertEquals(3, response.length);
+        assertTrue(gotCorrectResponse(response[1], "paper", "rock", "scissors"));
+        assertEquals("Bye!", response[2]);
     }
 
     @RepeatedTest(25)
-    @StdIo({"scissors", "!exit"})
+    @StdIo({"Scissors", "scissors", "!exit"})
     void testUserChoiceScissors(StdOut out) {
         Main.main(new String[]{});
         String[] response = out.capturedLines();
-        assertEquals(2, response.length);
-        assertTrue(gotCorrectResponse(response[0], "scissors", "paper", "rock"));
-        assertEquals("Bye!", response[1]);
+        assertEquals(3, response.length);
+        assertTrue(gotCorrectResponse(response[1], "scissors", "paper", "rock"));
+        assertEquals("Bye!", response[2]);
     }
 
     private boolean gotCorrectResponse(String response, String draw, String win, String lose) {
@@ -89,14 +89,47 @@ class MainTest {
     }
 
     @Test
-    @StdIo({"vellum", "pliers", "granite", "!exit"})
+    @StdIo({"Invalid", "vellum", "pliers", "granite", "!exit"})
     void testInvalidChoices(StdOut out) {
         Main.main(new String[]{});
         String[] response = out.capturedLines();
-        assertEquals(4, response.length);
-        assertEquals("Invalid input.", response[0]);
+        assertEquals(5, response.length);
         assertEquals("Invalid input.", response[1]);
         assertEquals("Invalid input.", response[2]);
-        assertEquals("Bye!", response[3]);
+        assertEquals("Invalid input.", response[3]);
+        assertEquals("Bye!", response[4]);
+    }
+
+    @Test
+    @StdIo({"Player", "!rating", "!exit"})
+    void testRatingWithNoPlays(StdOut out) {
+        Main.main(new String[]{});
+        String[] output = out.capturedLines();
+        assertEquals(3, output.length);
+        assertEquals("Enter your name: Hello, Player", output[0]);
+        assertEquals("Your rating: 0", output[1]);
+        assertEquals("Bye!", output[2]);
+    }
+
+    @Test
+    @StdIo({"Sam", "!rating", "rock", "paper", "scissors", "!rating", "!exit"})
+    void testRatingAfterThreeRounds(StdOut out) {
+        Main.main(new String[]{});
+        String[] output = out.capturedLines();
+        int score = calculateScore(output);
+        assertEquals(7, output.length);
+        assertTrue(output[0].contains("Sam"));
+        assertTrue(output[1].contains("0"));
+        assertTrue(output[5].contains(String.valueOf(score)));
+        assertEquals("Bye!", output[6]);
+    }
+
+    int calculateScore(final String[] output) {
+        int score = 0;
+        for (String line : output) {
+            if (line.contains("Well done")) { score += 100; }
+            if (line.contains("draw")) { score += 50; }
+        }
+        return score;
     }
 }
