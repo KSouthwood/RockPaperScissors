@@ -1,31 +1,39 @@
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.api.Test;
 
-import java.util.stream.Stream;
+import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ResultTest {
 
-    @ParameterizedTest
-    @MethodSource
-    void testDetermineResult(Choice user, Choice computer, Result expected) {
-        Result actual = Result.determineResult(user, computer);
-        assertEquals(expected, actual);
+    @Test
+    void testDefaultOptions() {
+        var choicesMap = buildMapOfChoices("rock,paper,scissors");
+        var user = choicesMap.get("rock");
+        assertEquals(Result.WIN, Result.determineResult(user, choicesMap.get("scissors")));
+        assertEquals(Result.DRAW, Result.determineResult(user, choicesMap.get("rock")));
+        assertEquals(Result.LOSE, Result.determineResult(user, choicesMap.get("paper")));
     }
 
-    public static Stream<Arguments> testDetermineResult() {
-        return Stream.of(
-                Arguments.of(Choice.ROCK, Choice.ROCK, Result.DRAW),
-                Arguments.of(Choice.ROCK, Choice.PAPER, Result.LOSE),
-                Arguments.of(Choice.ROCK, Choice.SCISSORS, Result.WIN),
-                Arguments.of(Choice.PAPER, Choice.ROCK, Result.WIN),
-                Arguments.of(Choice.PAPER, Choice.PAPER, Result.DRAW),
-                Arguments.of(Choice.PAPER, Choice.SCISSORS, Result.LOSE),
-                Arguments.of(Choice.SCISSORS, Choice.ROCK, Result.LOSE),
-                Arguments.of(Choice.SCISSORS, Choice.PAPER, Result.WIN),
-                Arguments.of(Choice.SCISSORS, Choice.SCISSORS, Result.DRAW)
-        );
+    @Test
+    void testFiveOptions() {
+        var choicesMap = buildMapOfChoices("rock,paper,scissors,lizard,spock");
+        var user = choicesMap.get("scissors");
+        assertEquals(Result.DRAW, Result.determineResult(user, choicesMap.get("scissors")));
+        assertEquals(Result.WIN, Result.determineResult(user, choicesMap.get("rock")));
+        assertEquals(Result.WIN, Result.determineResult(user, choicesMap.get("paper")));
+        assertEquals(Result.LOSE, Result.determineResult(user, choicesMap.get("lizard")));
+        assertEquals(Result.LOSE, Result.determineResult(user, choicesMap.get("spock")));
+    }
+
+    private LinkedHashMap<String, Choices> buildMapOfChoices(final String choices) {
+        var options = choices.split(",");
+        var choicesMap = new LinkedHashMap<String, Choices>();
+
+        for (int index = 0; index < options.length; index++) {
+            choicesMap.put(options[index], new Choices(index, options));
+        }
+
+        return choicesMap;
     }
 }

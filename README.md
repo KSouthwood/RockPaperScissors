@@ -58,13 +58,13 @@ game rounds possible.
 ##### _Description_
 
 We came up with a really cool idea in the previous stage. But the game is really short. Nobody plays a single shot of
-rock paper scissors. We need to find a way to run the game forever. Not literally, though—let's implement a way to 
+rock paper scissors. We need to find a way to run the game forever. Not literally, though—let's implement a way to
 stop your program.
 
 Improve the program so it will take an unlimited number of inputs until the user enters `!exit`. After entering `!exit`,
-the program should print `Bye!` and terminate.  Also, let's try to handle invalid inputs: your program should 
-be ready to handle typos in user input, or when there's a mishmash instead of a normal command. So, if the input 
-doesn't correspond to any known command (an option or `!exit`), your program should output the following line: 
+the program should print `Bye!` and terminate. Also, let's try to handle invalid inputs: your program should
+be ready to handle typos in user input, or when there's a mishmash instead of a normal command. So, if the input
+doesn't correspond to any known command (an option or `!exit`), your program should output the following line:
 `Invalid input`.
 
 ### Stage 4: [Scoring the game](https://hyperskill.org/projects/314/stages/1767/implement)
@@ -76,19 +76,43 @@ to read the records of the results of previous games, as well as tally the user'
 
 ##### _Description_
 
-People love to see their results as they're advancing to their goals. So, let's learn how to show the scoreboard! 
-When the game starts, users must be able to enter their names. After that, the program should greet users and read a 
-file named `rating.txt`. It is the file that contains the current scores for different players. The file format is 
+People love to see their results as they're advancing to their goals. So, let's learn how to show the scoreboard!
+When the game starts, users must be able to enter their names. After that, the program should greet users and read a
+file named `rating.txt`. It is the file that contains the current scores for different players. The file format is
 lines that contain a username and their score, divided by a single space.
 
-Take the current user score from the file and use it as a basis for counting the score during the game. If a user 
+Take the current user score from the file and use it as a basis for counting the score during the game. If a user
 inputs a name that is not in the file, the program should count their score from 0. Print the user score with the `!
-rating` command. Add 50 points for every draw, 100 for every win and 0 for losing. 
+rating` command. Add 50 points for every draw, 100 for every win and 0 for losing.
 
-### Stage 5: [Equalizing chances](https://hyperskill.org/projects/314/stages/1768/implement)
+### Stage 5: [More options](https://hyperskill.org/projects/314/stages/1768/implement)
 
 #### _Summary_
 
 Let's raise the stakes, shall we? In the final stage of the project, your program will let the player choose what
 options will be used in the game and how many of them will be there. This will require some more advanced knowledge
-about lists in Java. 
+about lists in Java.
+
+##### _Description_
+
+How about new game rules? The original game has a fairly small choice of options. The program should now accept
+alternative lists of options, like `Rock`, `Paper`, `Scissors`, `Lizard`, `Spock` and so on.
+
+For this stage, before the game starts, users can choose the options. After entering their name, they should provide
+a list of the options separated by a comma. (i.e., `rock,paper,scissors,lizard,spock`). If they enter an empty line,
+start the game with default options `rock`, `paper`, and `scissors`. Once the game options are defined, output
+`Okay, let's start`.
+
+Regardless of the chosen options, the program should identify which option beats which. The general algorithm to 
+determine which options are stronger or weaker is to take the list of options provided by the user and pick the 
+option that you want to know the relationships of. Then create a list of the remaining options starting with the 
+option directly after the chosen one, looping back to the start of the list when you reach the end until you've 
+gathered all but the chosen option. Now, you have another list of options that don't include the user's option with a 
+different order of elements inside. First are the options that follow the chosen one in the original list; then, 
+there are the ones that precede it. So, in this "new" list, the first half of the options defeat the "chosen" option,
+and the second half is beaten by it.
+
+For example, the user's list of options is `rock,paper,scissors,lizard,spock`. You want to know what options are 
+weaker than `lizard`. By looking at the list `spock,rock,paper,scissors` you realize that `spock` and `rock` beat 
+`lizard`. `Paper` and `scissors` are defeated by it. For `spock`, it'll be almost the same, but it'll get beaten by 
+`rock` and `paper`, and prevail over `scissors` and `lizard`.

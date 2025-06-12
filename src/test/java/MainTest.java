@@ -53,33 +53,33 @@ class MainTest {
     }
 
     @RepeatedTest(25)
-    @StdIo({"Rock", "rock", "!exit"})
+    @StdIo({"Rock", "", "rock", "!exit"})
     void testUserChoiceRock(StdOut out) {
         Main.main(new String[]{});
         String[] response = out.capturedLines();
-        assertEquals(3, response.length);
-        assertTrue(gotCorrectResponse(response[1], "rock", "scissors", "paper"));
-        assertEquals("Bye!", response[2]);
+        assertEquals(4, response.length);
+        assertTrue(gotCorrectResponse(response[2], "rock", "scissors", "paper"));
+        assertEquals("Bye!", response[3]);
     }
 
     @RepeatedTest(25)
-    @StdIo({"Paper", "paper", "!exit"})
+    @StdIo({"Paper", "", "paper", "!exit"})
     void testUserChoicePaper(StdOut out) {
         Main.main(new String[]{});
         String[] response = out.capturedLines();
-        assertEquals(3, response.length);
-        assertTrue(gotCorrectResponse(response[1], "paper", "rock", "scissors"));
-        assertEquals("Bye!", response[2]);
+        assertEquals(4, response.length);
+        assertTrue(gotCorrectResponse(response[2], "paper", "rock", "scissors"));
+        assertEquals("Bye!", response[3]);
     }
 
     @RepeatedTest(25)
-    @StdIo({"Scissors", "scissors", "!exit"})
+    @StdIo({"Scissors", "", "scissors", "!exit"})
     void testUserChoiceScissors(StdOut out) {
         Main.main(new String[]{});
         String[] response = out.capturedLines();
-        assertEquals(3, response.length);
-        assertTrue(gotCorrectResponse(response[1], "scissors", "paper", "rock"));
-        assertEquals("Bye!", response[2]);
+        assertEquals(4, response.length);
+        assertTrue(gotCorrectResponse(response[2], "scissors", "paper", "rock"));
+        assertEquals("Bye!", response[3]);
     }
 
     private boolean gotCorrectResponse(String response, String draw, String win, String lose) {
@@ -89,39 +89,40 @@ class MainTest {
     }
 
     @Test
-    @StdIo({"Invalid", "vellum", "pliers", "granite", "!exit"})
+    @StdIo({"Invalid", "", "vellum", "pliers", "granite", "!exit"})
     void testInvalidChoices(StdOut out) {
         Main.main(new String[]{});
         String[] response = out.capturedLines();
-        assertEquals(5, response.length);
-        assertEquals("Invalid input.", response[1]);
+        assertEquals(6, response.length);
         assertEquals("Invalid input.", response[2]);
         assertEquals("Invalid input.", response[3]);
-        assertEquals("Bye!", response[4]);
+        assertEquals("Invalid input.", response[4]);
+        assertEquals("Bye!", response[5]);
     }
 
     @Test
-    @StdIo({"Player", "!rating", "!exit"})
+    @StdIo({"Player", "", "!rating", "!exit"})
     void testRatingWithNoPlays(StdOut out) {
         Main.main(new String[]{});
         String[] output = out.capturedLines();
-        assertEquals(3, output.length);
+        assertEquals(4, output.length);
         assertEquals("Enter your name: Hello, Player", output[0]);
-        assertEquals("Your rating: 0", output[1]);
-        assertEquals("Bye!", output[2]);
+        assertEquals("Okay, let's start", output[1]);
+        assertEquals("Your rating: 0", output[2]);
+        assertEquals("Bye!", output[3]);
     }
 
     @Test
-    @StdIo({"Sam", "!rating", "rock", "paper", "scissors", "!rating", "!exit"})
+    @StdIo({"Sam", "", "!rating", "rock", "paper", "scissors", "!rating", "!exit"})
     void testRatingAfterThreeRounds(StdOut out) {
         Main.main(new String[]{});
         String[] output = out.capturedLines();
         int score = calculateScore(output);
-        assertEquals(7, output.length);
+        assertEquals(8, output.length);
         assertTrue(output[0].contains("Sam"));
-        assertTrue(output[1].contains("0"));
-        assertTrue(output[5].contains(String.valueOf(score)));
-        assertEquals("Bye!", output[6]);
+        assertTrue(output[2].contains("0"));
+        assertTrue(output[6].contains(String.valueOf(score)));
+        assertEquals("Bye!", output[7]);
     }
 
     int calculateScore(final String[] output) {

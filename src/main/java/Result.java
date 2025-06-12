@@ -21,9 +21,9 @@ enum Result {
         return function;
     }
 
-    static Result determineResult(final Choice userChoice, final Choice computerChoice) {
-        if (userChoice.getChoice(userChoice.beats()).equals(computerChoice)) { return WIN; }
-        if (userChoice.getChoice(userChoice.losesTo()).equals(computerChoice)) { return LOSE; }
-        return DRAW;
+    static Result determineResult(final Choices user, final Choices computer) {
+        if (user.name().equals(computer.name())) { return DRAW; }
+        if (user.loses().contains(computer.name())) { return LOSE; }
+        return WIN;
     }
 }
